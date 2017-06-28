@@ -1,0 +1,29 @@
+---
+- name: Install Packages
+  apt:
+    name:
+    - mercurial
+    - subversion
+    - python-pygments
+    - sendmail
+    - imagemagick
+    state: present
+
+- name: Create phd user with admin privileges
+  user:
+    name: phd
+    shell: /bin/bash
+    group: admin
+    append: yes
+
+- name: Create git user
+  user:
+    name: git
+
+- name: Create /var/repo directory
+  file:
+    path: /var/repo
+    state: directory
+    owner: phd
+    group: phd
+    mode: 0775
