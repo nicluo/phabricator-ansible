@@ -25,5 +25,37 @@
     path: /var/repo
     state: directory
     owner: phd
-    group: phd
     mode: 0775
+
+- name: clone phutil
+  git: repo=https://github.com/phacility/libphutil.git dest=/home/phd/libphutil
+
+- name: clone phabricator
+  git: repo=https://github.com/phacility/phabricator.git dest=/home/phd/phabricator
+  register: phabricator
+
+- name: clone arcanist
+  git: repo=https://github.com/phacility/arcanist dest=/home/phd/arcanist
+
+- name: Add site for the app under development
+  template: src=nginx.site.conf.j2
+            dest=/etc/nginx/sites-available/site.conf
+
+- name: Activate the app
+  file: src=/etc/nginx/sites-available/site.conf
+        dest=/etc/nginx/sites-enabled/site.conf
+        state=link
+
+- service:
+    name: nginx
+    state: restarted
+
+- name: Set password
+  command: ./bin/config set mysql.pass root
+  args:
+    chdir: /home/phd/phabricator
+
+- name: Set password
+  command: ./bin/storage upgrade --force
+  args:
+    chdir: /home/phd/phabricator

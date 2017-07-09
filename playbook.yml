@@ -11,7 +11,8 @@
 
   roles:
     - geerlingguy.nginx
+    - geerlingguy.mysql
     - geerlingguy.php-versions
     - geerlingguy.php
-    - geerlingguy.mysql
+    - geerlingguy.php-mysql
     - phabricator

@@ -6,3 +6,4 @@ php_enable_php_fpm: true
 nginx_worker_connections: 1024
 
 mysql_root_password: root
+mysql_sql_mode: STRICT_ALL_TABLES
