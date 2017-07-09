@@ -64,3 +64,8 @@
   command: ./bin/config set pygments.enabled true
   args:
     chdir: /home/phd/phabricator
+
+- name: Set Base URI
+  command: ./bin/config set phabricator.base-uri 'http://phabricator.dev/'
+  args:
+    chdir: /home/phd/phabricator
