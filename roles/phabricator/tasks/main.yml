@@ -55,7 +55,7 @@
   args:
     chdir: /home/phd/phabricator
 
-- name: Set password
+- name: Initialize Storage (--force for noninteractive version)
   command: ./bin/storage upgrade --force
   args:
     chdir: /home/phd/phabricator
