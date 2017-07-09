@@ -59,3 +59,8 @@
   command: ./bin/storage upgrade --force
   args:
     chdir: /home/phd/phabricator
+
+- name: Enable pygments
+  command: ./bin/config set pygments.enabled true
+  args:
+    chdir: /home/phd/phabricator
