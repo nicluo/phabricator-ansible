@@ -109,3 +109,8 @@
   command: ./bin/config set phd.user phd
   args:
     chdir: /home/phd/phabricator
+
+- name: Set Diffusion user
+  command: ./bin/config set diffusion.ssh-user git
+  args:
+    chdir: /home/phd/phabricator
