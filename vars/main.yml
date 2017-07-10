@@ -9,6 +9,9 @@ php_memory_limit: -1
 php_max_input_vars: 3000
 php_upload_max_filesize: 32M
 
+# Configure OPcache for Production
+php_opcache_validate_timestamps: 0
+
 nginx_worker_connections: 1024
 nginx_client_max_body_size: 32M
 
