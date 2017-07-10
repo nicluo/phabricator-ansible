@@ -1,0 +1,15 @@
+---
+- name: Add systemd phabricator-phd service
+  template: src=phabricator-phd.service.j2
+            dest=/lib/systemd/system/phabricator-phd.service
+
+- name: Enable and start phd daemon
+  systemd:
+    name: phabricator-phd
+    state: started
+    enabled: true
+
+- name: Configure phd.user
+  command: ./bin/config set phd.user phd
+  args:
+    chdir: /home/phd/phabricator

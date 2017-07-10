@@ -1,0 +1,18 @@
+---
+- name: Create phabricator-files directory
+  file:
+    path: /home/phd/phabricator-files
+    state: directory
+    owner: phd
+    group: www-data
+    mode: 0775
+
+- name: Configure storage.local-disk.path
+  command: ./bin/config set storage.local-disk.path /home/phd/phabricator-files
+  args:
+    chdir: /home/phd/phabricator
+
+- name: Configure security.alternate-file-domain
+  command: ./bin/config set security.alternate-file-domain 'http://phabfiles.dev'
+  args:
+    chdir: /home/phd/phabricator

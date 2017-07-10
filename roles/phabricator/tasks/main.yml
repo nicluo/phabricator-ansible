@@ -1,12 +1,11 @@
 ---
-- name: Install Packages
+- name: Install packages
   apt:
     name:
     - mercurial
     - subversion
-    - python-pygments
+    - git
     - sendmail
-    - imagemagick
     state: present
 
 - name: Create phd user with admin privileges
@@ -20,102 +19,45 @@
   user:
     name: git
 
-- name: Create /var/repo directory
-  file:
-    path: /var/repo
-    state: directory
-    owner: phd
-    mode: 0775
-
-- name: clone phutil
-  become: yes
-  become_user: phd
-  git: repo=https://github.com/phacility/libphutil.git dest=/home/phd/libphutil
-
 - name: clone phabricator
   git: repo=https://github.com/phacility/phabricator.git dest=/home/phd/phabricator
   become: yes
   become_user: phd
   register: phabricator
 
+- name: clone phutil
+  become: yes
+  become_user: phd
+  git: repo=https://github.com/phacility/libphutil.git dest=/home/phd/libphutil
+
 - name: clone arcanist
   become: yes
   become_user: phd
   git: repo=https://github.com/phacility/arcanist dest=/home/phd/arcanist
-
-- name: Add site for the app under development
-  template: src=nginx.site.conf.j2
-            dest=/etc/nginx/sites-available/site.conf
-
-- name: Activate the app
-  file: src=/etc/nginx/sites-available/site.conf
-        dest=/etc/nginx/sites-enabled/site.conf
-        state=link
-
-- service:
-    name: nginx
-    state: restarted
-
-- name: Set password
-  command: ./bin/config set mysql.pass root
-  args:
-    chdir: /home/phd/phabricator
-
-- name: Initialize Storage (--force for noninteractive version)
-  command: ./bin/storage upgrade --force
-  args:
-    chdir: /home/phd/phabricator
-
-- name: Enable pygments
-  command: ./bin/config set pygments.enabled true
-  args:
-    chdir: /home/phd/phabricator
 
 - name: Set Base URI
   command: ./bin/config set phabricator.base-uri 'http://phabricator.dev/'
   args:
     chdir: /home/phd/phabricator
 
+# Setup MySQL configuration and initialize database storage
+- include: database.yml
 
-- name: Create /home/phd/phabricator-files directory
-  file:
-    path: /home/phd/phabricator-files
-    state: directory
-    owner: phd
-    group: www-data
-    mode: 0775
+# Setup Nginx virtualhosts
+- include: nginx.yml
 
-- name: Set local-disk file storage
-  command: ./bin/config set storage.local-disk.path /home/phd/phabricator-files
-  args:
-    chdir: /home/phd/phabricator
+# Setup Phd daemon
+- include: daemon.yml
 
-- name: Configure Alternate File Domain
-  command: ./bin/config set security.alternate-file-domain 'http://phabfiles.dev'
-  args:
-    chdir: /home/phd/phabricator
+# Setup local disk file storage
+- include: storage.yml
 
-- name: Add Systemd phd script
-  template: src=phabricator-phd.service
-          dest=/lib/systemd/system/phabricator-phd.service
+# Setup Imagemagick
+- include: imagemagick.yml
 
-- name: enable phd daemon
-  systemd:
-    name: phabricator-phd
-    state: started
-    enabled: True
+# Setup Pygments
+- include: pygments.yml
 
-- name: Set Phd User
-  command: ./bin/config set phd.user phd
-  args:
-    chdir: /home/phd/phabricator
+# Setup Diffusion
+- include: diffusion.yml
 
-- name: Set Diffusion user
-  command: ./bin/config set diffusion.ssh-user git
-  args:
-    chdir: /home/phd/phabricator
-
-- name: Enable Imagemagick
-  command: ./bin/config set files.enable-imagemagick true
-  args:
-    chdir: /home/phd/phabricator
