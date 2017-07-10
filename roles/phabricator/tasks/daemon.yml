@@ -10,6 +10,6 @@
     enabled: true
 
 - name: Configure phd.user
-  command: ./bin/config set phd.user phd
+  command: ./bin/config set phd.user {{ phabricator_phd_user }}
   args:
     chdir: /home/phd/phabricator

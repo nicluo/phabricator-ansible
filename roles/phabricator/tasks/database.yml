@@ -1,3 +1,4 @@
+---
 - name: Set mysql password
   command: ./bin/config set mysql.pass {{ mysql_root_password }}
   args:

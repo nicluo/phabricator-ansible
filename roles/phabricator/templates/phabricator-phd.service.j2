@@ -3,7 +3,7 @@ Description=phabricator-phd
 After=syslog.target network.target network.target nginx.service php-fpm.service mysqld.service
 
 [Service]
-User=phd
+User={{ phabricator_phd_user }}
 Group=admin
 Type=oneshot
 Environment=PATH=/sbin:/usr/sbin:/usr/local/sbin:/usr/local/bin:/usr/bin:/bin

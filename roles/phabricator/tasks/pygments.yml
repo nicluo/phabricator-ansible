@@ -1,8 +1,7 @@
 ---
-- name: Install Packages
+- name: Install Pygments package
   apt:
-    name:
-    - python-pygments
+    name: python-pygments
     state: present
 
 - name: Enable Pygments in Phabricator configuration

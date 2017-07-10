@@ -1,8 +1,7 @@
 ---
-- name: Install Packages
+- name: Install Imagemagick package
   apt:
-    name:
-    - imagemagick
+    name: imagemagick
     state: present
 
 - name: Enable Imagemagick in Phabricator configuration

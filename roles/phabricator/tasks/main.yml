@@ -10,7 +10,7 @@
 
 - name: Create phd user with admin privileges
   user:
-    name: phd
+    name: "{{ phabricator_phd_user }}"
     shell: /bin/bash
     group: admin
     append: yes
@@ -19,20 +19,20 @@
   user:
     name: git
 
-- name: clone phabricator
+- name: Clone phabricator repository
   git: repo=https://github.com/phacility/phabricator.git dest=/home/phd/phabricator
   become: yes
-  become_user: phd
+  become_user: "{{ phabricator_phd_user }}"
   register: phabricator
 
-- name: clone phutil
+- name: Clone phutil repository
   become: yes
-  become_user: phd
+  become_user: "{{ phabricator_phd_user }}"
   git: repo=https://github.com/phacility/libphutil.git dest=/home/phd/libphutil
 
-- name: clone arcanist
+- name: Clone arcanist repository
   become: yes
-  become_user: phd
+  become_user: "{{ phabricator_phd_user }}"
   git: repo=https://github.com/phacility/arcanist dest=/home/phd/arcanist
 
 - name: Set Base URI

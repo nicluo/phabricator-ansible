@@ -1,14 +1,14 @@
 ---
 - name: Create phabricator-files directory
   file:
-    path: /home/phd/phabricator-files
+    path: "{{ phabricator_storage_local_disk_path }}"
+    owner: "{{ phabricator_phd_user }}"
     state: directory
-    owner: phd
     group: www-data
     mode: 0775
 
 - name: Configure storage.local-disk.path
-  command: ./bin/config set storage.local-disk.path /home/phd/phabricator-files
+  command: ./bin/config set storage.local-disk.path {{ phabricator_storage_local_disk_path }}
   args:
     chdir: /home/phd/phabricator
 
