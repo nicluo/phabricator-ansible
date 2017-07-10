@@ -28,13 +28,19 @@
     mode: 0775
 
 - name: clone phutil
+  become: yes
+  become_user: phd
   git: repo=https://github.com/phacility/libphutil.git dest=/home/phd/libphutil
 
 - name: clone phabricator
   git: repo=https://github.com/phacility/phabricator.git dest=/home/phd/phabricator
+  become: yes
+  become_user: phd
   register: phabricator
 
 - name: clone arcanist
+  become: yes
+  become_user: phd
   git: repo=https://github.com/phacility/arcanist dest=/home/phd/arcanist
 
 - name: Add site for the app under development
@@ -86,5 +92,20 @@
 
 - name: Configure Alternate File Domain
   command: ./bin/config set security.alternate-file-domain 'http://phabfiles.dev'
+  args:
+    chdir: /home/phd/phabricator
+
+- name: Add Systemd phd script
+  template: src=phabricator-phd.service
+          dest=/lib/systemd/system/phabricator-phd.service
+
+- name: enable phd daemon
+  systemd:
+    name: phabricator-phd
+    state: started
+    enabled: True
+
+- name: Set Phd User
+  command: ./bin/config set phd.user phd
   args:
     chdir: /home/phd/phabricator

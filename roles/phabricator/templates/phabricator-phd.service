@@ -1,0 +1,15 @@
+[Unit]
+Description=phabricator-phd
+After=syslog.target network.target network.target nginx.service php-fpm.service mysqld.service
+
+[Service]
+User=phd
+Group=admin
+Type=oneshot
+Environment=PATH=/sbin:/usr/sbin:/usr/local/sbin:/usr/local/bin:/usr/bin:/bin
+ExecStart=/home/phd/phabricator/bin/phd start
+ExecStop=/home/phd/phabricator/bin/phd stop
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
