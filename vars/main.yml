@@ -3,7 +3,14 @@ php_version: "7.1"
 php_webserver_daemon: nginx
 php_enable_php_fpm: true
 
+# Configure File Storage
+php_post_max_size: 32M
+php_memory_limit: -1
+php_max_input_vars: 3000
+php_upload_max_filesize: 32M
+
 nginx_worker_connections: 1024
+nginx_client_max_body_size: 32M
 
 mysql_root_password: root
 mysql_sql_mode: STRICT_ALL_TABLES
