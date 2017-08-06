@@ -14,4 +14,7 @@ Using a VagrantBox to provision a local install makes it easy to debug and modif
 
 `vagrant-hostmanager` sets a hostname for the local Phabricator install. This allows us to use a convenient url like `phabricator.dev` and have Vagrant automatically manage our `/etc/hosts` file.
 
+First, install Ansible Galaxy requirements by running `ansible-galaxy install -r requirements.yml`.
+
+
 Use `vagrant up` to boot, `vagrant provision` to re-run the playbook.
