@@ -7,4 +7,4 @@
 - name: Enable Imagemagick in Phabricator configuration
   command: ./bin/config set files.enable-imagemagick true
   args:
-    chdir: /home/phd/phabricator
+    chdir: "{{ phabricator_install_directory }}"

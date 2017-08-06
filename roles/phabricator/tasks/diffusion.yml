@@ -6,24 +6,24 @@
     owner: phd
     mode: 0775
 
-- name: Set diffusion user
-  command: ./bin/config set diffusion.ssh-user git
+- name: Set diffusion VCS user
+  command: './bin/config set diffusion.ssh-user {{ phabricator_vcs_user}}'
   args:
-    chdir: /home/phd/phabricator
+    chdir: "{{ phabricator_install_directory }}"
 
-- name: Configuring sudo for git
+- name: Configuring sudo for VCS user
   lineinfile:
     dest: /etc/sudoers
     state: present
     regexp: '^%git'
     line: '%git ALL=(phd) SETENV: NOPASSWD: /usr/bin/git, /usr/bin/git-upload-pack, /usr/bin/git-receive-pack'
 
-- name: Configuring sudo for www-data
+- name: Configuring sudo for web user
   lineinfile:
     dest: /etc/sudoers
     state: present
-    regexp: '^%www-data'
-    line: '%www-data ALL=(phd) SETENV: NOPASSWD: /usr/bin/git, /usr/bin/git-http-backend'
+    regexp: '^%{{ phabricator_web_user }}'
+    line: '%{{ phabricator_web_user }} ALL=(phd) SETENV: NOPASSWD: /usr/bin/git, /usr/bin/git-http-backend'
 
 - name: Additional SSH Configuration
   command: usermod -p NP git
@@ -32,9 +32,9 @@
   command: usermod -s /bin/sh git
 
 - name: Set SSHD port
-  command: ./bin/config set diffusion.ssh-port 2222
+  command: './bin/config set diffusion.ssh-port {{ phabricator_sshd_port }}'
   args:
-    chdir: /home/phd/phabricator
+    chdir: "{{ phabricator_install_directory }}"
 
 - name: Ensure /usr/libexec directory exists
   file:

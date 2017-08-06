@@ -4,15 +4,15 @@
     path: "{{ phabricator_storage_local_disk_path }}"
     owner: "{{ phabricator_phd_user }}"
     state: directory
-    group: www-data
+    group: "{{ phabricator_web_user }}"
     mode: 0775
 
 - name: Configure storage.local-disk.path
   command: ./bin/config set storage.local-disk.path {{ phabricator_storage_local_disk_path }}
   args:
-    chdir: /home/phd/phabricator
+    chdir: "{{ phabricator_install_directory }}"
 
 - name: Configure security.alternate-file-domain
   command: ./bin/config set security.alternate-file-domain 'http://phabfiles.dev'
   args:
-    chdir: /home/phd/phabricator
+    chdir: "{{ phabricator_install_directory }}"
