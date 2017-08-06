@@ -10,3 +10,77 @@
   command: ./bin/config set diffusion.ssh-user git
   args:
     chdir: /home/phd/phabricator
+
+- name: Configuring sudo for git
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: '^%git'
+    line: '%git ALL=(phd) SETENV: NOPASSWD: /usr/bin/git, /usr/bin/git-upload-pack, /usr/bin/git-receive-pack'
+
+- name: Configuring sudo for www-data
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: '^%www-data'
+    line: '%www-data ALL=(phd) SETENV: NOPASSWD: /usr/bin/git, /usr/bin/git-http-backend'
+
+- name: Additional SSH Configuration
+  command: usermod -p NP git
+
+- name: Additional SSH Configuration
+  command: usermod -s /bin/sh git
+
+- name: Set SSHD port
+  command: ./bin/config set diffusion.ssh-port 2222
+  args:
+    chdir: /home/phd/phabricator
+
+- name: Ensure /usr/libexec directory exists
+  file:
+    path: /usr/libexec
+    state: directory
+    owner: root
+    group: git
+    mode: 0750
+
+- name: Create phabricator-ssh-hook.sh
+  copy:
+    src: /home/phd/phabricator/resources/sshd/phabricator-ssh-hook.sh
+    dest: /usr/libexec/phabricator-ssh-hook.sh
+    owner: root
+    group: git
+    mode: 0750
+    remote_src: yes
+
+- name: Edit vcs-user in phabricator-ssh-hook.sh
+  replace:
+    dest: /usr/libexec/phabricator-ssh-hook.sh
+    regexp: '^(.*)vcs-user(.*)$'
+    replace: '\1git\2'
+    backup: yes
+
+- name: Edit path to phabricator in phabricator-ssh-hook.sh
+  replace:
+    dest: /usr/libexec/phabricator-ssh-hook.sh
+    regexp: '^(.*)/path/to/phabricator(.*)$'
+    replace: '\1/home/phd/phabricator\2'
+    backup: yes
+
+- name: Create sshd_config for Phabricator
+  copy:
+    src: /home/phd/phabricator/resources/sshd/sshd_config.phabricator.example
+    dest: /etc/ssh/sshd_config.phabricator
+    owner: root
+    group: root
+    mode: 0755
+    remote_src: yes
+
+- name: Edit vcs-user in sshd_config
+  replace:
+    dest: /etc/ssh/sshd_config.phabricator
+    regexp: '^(.*)vcs-user(.*)$'
+    replace: '\1git\2'
+    backup: yes
+
+# TODO: start sshd daemon
