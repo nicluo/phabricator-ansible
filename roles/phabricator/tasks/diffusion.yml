@@ -83,4 +83,12 @@
     replace: '\1git\2'
     backup: yes
 
-# TODO: start sshd daemon
+- name: Add systemd phabricator-sshd service
+  template: src=phabricator-sshd.service.j2
+            dest=/lib/systemd/system/phabricator-sshd.service
+
+- name: Enable and start sshd daemon
+  systemd:
+    name: phabricator-sshd
+    state: started
+    enabled: true
