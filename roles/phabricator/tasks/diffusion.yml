@@ -3,36 +3,36 @@
   file:
     path: /var/repo
     state: directory
-    owner: phd
+    owner: "{{ phabricator_vcs_user }}"
     mode: 0775
 
-- name: Set diffusion VCS user
-  command: './bin/config set diffusion.ssh-user {{ phabricator_vcs_user}}'
+- name: Set diffusion vcs user
+  command: ./bin/config set diffusion.ssh-user {{ phabricator_vcs_user}}
   args:
     chdir: "{{ phabricator_install_directory }}"
 
-- name: Configuring sudo for VCS user
+- name: Configuring sudo for vcs user
   lineinfile:
     dest: /etc/sudoers
     state: present
-    regexp: '^%git'
-    line: '%git ALL=(phd) SETENV: NOPASSWD: /usr/bin/git, /usr/bin/git-upload-pack, /usr/bin/git-receive-pack'
+    regexp: "^%{{ phabricator_vcs_user }}"
+    line: "%{{ phabricator_vcs_user }} ALL=(phd) SETENV: NOPASSWD: /usr/bin/git, /usr/bin/git-upload-pack, /usr/bin/git-receive-pack"
 
 - name: Configuring sudo for web user
   lineinfile:
     dest: /etc/sudoers
     state: present
-    regexp: '^%{{ phabricator_web_user }}'
-    line: '%{{ phabricator_web_user }} ALL=(phd) SETENV: NOPASSWD: /usr/bin/git, /usr/bin/git-http-backend'
+    regexp: "^%{{ phabricator_web_user }}"
+    line: "%{{ phabricator_web_user }} ALL=(phd) SETENV: NOPASSWD: /usr/bin/git, /usr/bin/git-http-backend"
 
 - name: Additional SSH Configuration
-  command: usermod -p NP git
+  command: usermod -p NP {{ phabricator_vcs_user }}
 
 - name: Additional SSH Configuration
-  command: usermod -s /bin/sh git
+  command: usermod -s /bin/sh {{ phabricator_vcs_user }}
 
 - name: Set SSHD port
-  command: './bin/config set diffusion.ssh-port {{ phabricator_sshd_port }}'
+  command: ./bin/config set diffusion.ssh-port {{ phabricator_sshd_port }}
   args:
     chdir: "{{ phabricator_install_directory }}"
 
@@ -41,35 +41,35 @@
     path: /usr/libexec
     state: directory
     owner: root
-    group: git
+    group: "{{ phabricator_vcs_user }}"
     mode: 0750
 
 - name: Create phabricator-ssh-hook.sh
   copy:
-    src: /home/phd/phabricator/resources/sshd/phabricator-ssh-hook.sh
+    src: "{{ phabricator_install_directory }}/resources/sshd/phabricator-ssh-hook.sh"
     dest: /usr/libexec/phabricator-ssh-hook.sh
     owner: root
-    group: git
+    group: "{{ phabricator_vcs_user }}"
     mode: 0750
     remote_src: yes
 
 - name: Edit vcs-user in phabricator-ssh-hook.sh
   replace:
     dest: /usr/libexec/phabricator-ssh-hook.sh
-    regexp: '^(.*)vcs-user(.*)$'
-    replace: '\1git\2'
+    regexp: "^(.*)vcs-user(.*)$"
+    replace: '\1{{ phabricator_vcs_user }}\2'
     backup: yes
 
 - name: Edit path to phabricator in phabricator-ssh-hook.sh
   replace:
     dest: /usr/libexec/phabricator-ssh-hook.sh
-    regexp: '^(.*)/path/to/phabricator(.*)$'
-    replace: '\1/home/phd/phabricator\2'
+    regexp: "^(.*)/path/to/phabricator(.*)$"
+    replace: '\1{{ phabricator_install_directory }}\2'
     backup: yes
 
 - name: Create sshd_config for Phabricator
   copy:
-    src: /home/phd/phabricator/resources/sshd/sshd_config.phabricator.example
+    src: "{{ phabricator_install_directory }}/resources/sshd/sshd_config.phabricator.example"
     dest: /etc/ssh/sshd_config.phabricator
     owner: root
     group: root
@@ -79,8 +79,8 @@
 - name: Edit vcs-user in sshd_config
   replace:
     dest: /etc/ssh/sshd_config.phabricator
-    regexp: '^(.*)vcs-user(.*)$'
-    replace: '\1git\2'
+    regexp: "^(.*)vcs-user(.*)$"
+    replace: '\1{{ phabricator_vcs_user }}\2'
     backup: yes
 
 - name: Add systemd phabricator-sshd service
