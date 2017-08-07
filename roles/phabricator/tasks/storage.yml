@@ -13,6 +13,6 @@
     chdir: "{{ phabricator_install_directory }}"
 
 - name: Configure security.alternate-file-domain
-  command: ./bin/config set security.alternate-file-domain 'http://phabfiles.dev'
+  command: ./bin/config set security.alternate-file-domain '{{ phabricator_alternate_file_domain }}'
   args:
     chdir: "{{ phabricator_install_directory }}"

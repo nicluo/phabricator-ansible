@@ -15,28 +15,34 @@
     group: admin
     append: yes
 
-- name: Create git user
+- name: Create VCS user
   user:
-    name: git
+    name: "{{ phabricator_vcs_user }}"
 
 - name: Clone phabricator repository
-  git: repo=https://github.com/phacility/phabricator.git dest=/home/phd/phabricator
   become: yes
   become_user: "{{ phabricator_phd_user }}"
   register: phabricator
+  git:
+    repo: https://github.com/phacility/phabricator.git
+    dest: "{{ phabricator_install_directory }}"
 
 - name: Clone phutil repository
   become: yes
   become_user: "{{ phabricator_phd_user }}"
-  git: repo=https://github.com/phacility/libphutil.git dest=/home/phd/libphutil
+  git:
+    repo: https://github.com/phacility/libphutil.git
+    dest: "{{ phabricator_libphutil_install_directory }}"
 
 - name: Clone arcanist repository
   become: yes
   become_user: "{{ phabricator_phd_user }}"
-  git: repo=https://github.com/phacility/arcanist dest=/home/phd/arcanist
+  git:
+    repo: https://github.com/phacility/arcanist
+    dest: "{{ phabricator_arcanist_install_directory }}"
 
 - name: Set Base URI
-  command: ./bin/config set phabricator.base-uri 'http://phabricator.dev/'
+  command: ./bin/config set phabricator.base-uri '{{ phabricator_hostname}}'
   args:
     chdir: "{{ phabricator_install_directory }}"
 
