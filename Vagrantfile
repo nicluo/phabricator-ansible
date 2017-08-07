@@ -23,7 +23,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.network :private_network, ip: vconfig.fetch('vagrant_ip')
   config.vm.hostname = vconfig.fetch('vagrant_hostname')
-  config.hostmanager.aliases = vconfig.fetch('vagrant_alt_file_domain')
+  config.hostmanager.aliases = vconfig.fetch('vagrant_alternate_file_domain')
 
   # Set the name of the VM. See: http://stackoverflow.com/a/17864388/100134
   config.vm.define :phabricator do |phabricator|
