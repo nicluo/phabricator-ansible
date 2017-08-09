@@ -3,7 +3,7 @@
   file:
     path: /var/repo
     state: directory
-    owner: "{{ phabricator_vcs_user }}"
+    owner: "{{ phabricator_phd_user }}"
     mode: 0775
 
 - name: Set diffusion vcs user
