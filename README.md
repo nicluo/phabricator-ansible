@@ -1,10 +1,12 @@
 # Phabricator on Ubuntu with Ansible
 
-This ansible script demonstrates the minimum needed to setup Phabricator using Ansible.
+This ansible script demonstrates a setup for Phabricator using Ansible on Ubuntu 16.04.
 
 This makes it easy for anyone to get started with Phabricator quickly and easily.
 
 Where possible, roles are taken from Ansible Galaxy, so that any extra configuration or scripting is specifically for Phabricator.
+
+Read the blog post for this project here: [Phabricator Provisioning with Vagrant and Ansible](https://nicluo.com/blog/phabricator-provisioning-with-vagrant-ansible/)
 
 Basic structure adapted from: https://gist.github.com/sparrc/b4eff48a3e7af8411fc1
 
