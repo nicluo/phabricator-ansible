@@ -43,7 +43,6 @@ Vagrant.configure("2") do |config|
   config.vm.provision "ansible" do |ansible|
     ansible.verbose = "v"
     ansible.playbook = "playbook.yml"
-    ansible.inventory_path = "inventory"
     ansible.sudo = true
   end
 end
