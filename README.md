@@ -21,6 +21,7 @@ Basic structure adapted from: https://gist.github.com/sparrc/b4eff48a3e7af8411fc
 -   Phabricator Git VCS setup
 -   Phabricator SSHD setup
 -   Phabricator Alternate File Domain setup
+-   Phabricator weekly upgrade script
 -   Pygments setup
 -   ImageMagick setup
 
