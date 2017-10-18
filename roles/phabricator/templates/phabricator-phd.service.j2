@@ -1,6 +1,6 @@
 [Unit]
 Description=phabricator-phd
-After=syslog.target network.target network.target nginx.service php-fpm.service mysqld.service
+After=syslog.target network.target network.target nginx.service php-fpm.service mysql.service
 
 [Service]
 User={{ phabricator_phd_user }}
