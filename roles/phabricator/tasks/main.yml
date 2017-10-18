@@ -67,3 +67,5 @@
 # Setup Diffusion
 - include: diffusion.yml
 
+# Setup Upgrade Cron Script
+- include: upgrade.yml

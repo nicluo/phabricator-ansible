@@ -1,0 +1,20 @@
+---
+- name: Install phabricator-upgrade shell script
+  template:
+    src: phabricator-upgrade.sh.j2
+    dest: "{{ phabricator_home_directory }}/phabricator-upgrade.sh"
+
+- name: Chmod phabricator-upgrade.sh
+  file:
+    path: "{{ phabricator_home_directory }}/phabricator-upgrade.sh"
+    state: file
+    mode: a+x
+
+- name: Install Cron job for phabricator-upgrade.sh
+  cron:
+     name: "upgrade phabricator"
+     weekday: 0
+     minute: 0
+     hour: 4
+     user: root
+     job: "{{ phabricator_home_directory }}/phabricator-upgrade.sh"

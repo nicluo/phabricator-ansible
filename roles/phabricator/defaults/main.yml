@@ -8,6 +8,7 @@ phabricator_vcs_user: git
 
 phabricator_sshd_port: 2222
 
+phabricator_home_directory: /home/phd
 phabricator_install_directory: /home/phd/phabricator
 phabricator_libphutil_install_directory: /home/phd/libphutil
 phabricator_arcanist_install_directory: /home/phd/arcanist
